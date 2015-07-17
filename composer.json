@@ -9,7 +9,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "php": ">=5.4"
+    },
     "autoload": {
         "psr-4": {
             "yadjet\\MutliLevelSelecter\\": "src/yadjet/MutliLevelSelecter"
