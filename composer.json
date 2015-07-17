@@ -1,0 +1,18 @@
+{
+    "name": "yadjet/yii2-multi-level-selecter",
+    "description": "Multi level selecter for Yii2",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "hiscaler",
+            "email": "hiscaler@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "yadjet\\MutliLevelSelecter\\": "src/yadjet/MutliLevelSelecter"
+        }
+    }
+}
