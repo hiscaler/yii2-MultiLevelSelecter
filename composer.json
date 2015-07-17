@@ -1,7 +1,9 @@
 {
     "name": "yadjet/yii2-multi-level-selecter",
     "description": "Multi level selecter for Yii2",
-    "license": "BSD",
+    "keywords": ["yii2", "multi level", "multi level selecter"],
+    "type": "project",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "hiscaler",
