@@ -2,13 +2,17 @@
 
 namespace yadjet\MultiLevelSelecter;
 
-use yii\widgets\InputWidget;
+use yii\helpers\Html;
+use yii\base\Widget;
 
 /**
  * 多级下拉
  */
-class MultiLevelSelecter extends InputWidget {
+class MultiLevelSelecter extends Widget
+{
 
+    public $form;
+    public $htmlOptions = [];
     public $config = [];
     private $_defaultConfig = [
         'file' => '',
@@ -19,36 +23,30 @@ class MultiLevelSelecter extends InputWidget {
         'disabledCount' => 0,
     ];
 
-    public function init() {
+    public function init()
+    {
+        parent::init();
         $this->config = array_merge($this->_defaultConfig, $this->config);
     }
 
-    public function run() {
-        parent::run();
-        list($name, $id) = $this->resolveNameID();
-        if (isset($this->htmlOptions['id'])) {
-            $id = $this->htmlOptions['id'];
-        } else {
-            $this->htmlOptions['id'] = $id;
-        }
-        if (isset($this->htmlOptions['name'])) {
-            $name = $this->htmlOptions['name'];
-        } else {
-            $this->htmlOptions['name'] = $name;
-        }
-
-        $tips = ($this->config['hasTip'] ? $this->config['tipText'] : '');
-        $baseDir = dirname(__FILE__);
-        $assets = Yii::app()->getAssetManager()->publish($baseDir . DIRECTORY_SEPARATOR . 'assets');
-        $cs = Yii::app()->getClientScript();
-        $cs->registerScriptFile($assets . '/multilevel-select.min.js');
-        $file = $this->config['file'];
-        Yii::import('ext.helpers.FileSystemHelper');
-        $cs->registerScriptFile($file . '?' . FileSystemHelper::lastChange(Yii::getPathOfAlias('webroot') . $file));
-        $js = <<<EOP
+    public function run()
+    {
+        $id = $this->options['id'];
+        $view = $this->getView();
+        MultiLevelSelecterAsset::register($view);
+        $tips = $this->config['hasTip'] ? $this->config['tipText'] : '';
+        $name = Html::getInputName($this->model, $this->attribute);
+        $view->registerJsFile($this->config['file']);
+        $js = <<<EOT
 drawSelect(document.getElementById("{$id}_render"), "{$this->config['itemName']}", 3, "{$name}", "{$this->config['defaultValue']}", "{$tips}", "required", "{$this->config['tipText']}", {$this->config['disabledCount']});
-EOP;
-        $cs->registerScript(__CLASS__, $js);
+EOT;
+        $view->registerJs($js);
+        if ($this->hasModel()) {
+            return $this->form->field($this->model, $this->attribute)->hiddenInput($this->htmlOptions);
+        } else {
+            list($name, $id) = $this->resolveNameID();
+            return Html::textField($name, $this->value, $this->htmlOptions);
+        }
     }
 
 }
